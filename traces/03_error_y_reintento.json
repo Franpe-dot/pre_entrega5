@@ -1,0 +1,86 @@
+{
+  "escenario": "03_error_y_reintento",
+  "descripcion": "Ciclo de retorno: una herramienta devuelve error (cliente inexistente) y otra un resultado ambiguo (dos clientes 'Gómez'); el agente explica o pide aclaración.",
+  "thread_id": "demo-errores-20261007-202605",
+  "modelo": "claude-sonnet-5-5",
+  "recursion_limit": 10,
+  "inicio": "2026-10-07T20:26:14-03:00",
+  "turnos": [
+    {
+      "usuario": "Mostrame los pedidos del cliente 999",
+      "pasos": [
+        {
+          "paso": 1,
+          "nodo": "agent",
+          "tipo": "tool_call",
+          "tool": "buscar_pedidos",
+          "args": {
+            "cliente_id": 999
+          },
+          "id": "toolu_015oprdsMi2xWxGgLWKzHQgc"
+        },
+        {
+          "paso": 2,
+          "nodo": "tools",
+          "tipo": "tool_result",
+          "tool": "buscar_pedidos",
+          "tool_call_id": "toolu_015oprdsMi2xWxGgLWKzHQgc",
+          "contenido": {
+            "error": "Cliente 999 no existe",
+            "sugerencia": "usar buscar_cliente para obtener el ID correcto o pedírselo al usuario"
+          }
+        },
+        {
+          "paso": 3,
+          "nodo": "agent",
+          "tipo": "final_answer",
+          "contenido": "No encontré ningún cliente con el ID 999. ¿Me pasás el nombre o el apellido del cliente? Con eso lo busco y obtengo el ID correcto."
+        }
+      ],
+      "tool_calls": 1
+    },
+    {
+      "usuario": "¿Qué pedidos tiene Gómez?",
+      "pasos": [
+        {
+          "paso": 1,
+          "nodo": "agent",
+          "tipo": "tool_call",
+          "tool": "buscar_cliente",
+          "args": {
+            "nombre": "Gómez"
+          },
+          "id": "toolu_01L5TTxR6TRoq8bcKrEuax7a"
+        },
+        {
+          "paso": 2,
+          "nodo": "tools",
+          "tipo": "tool_result",
+          "tool": "buscar_cliente",
+          "tool_call_id": "toolu_01L5TTxR6TRoq8bcKrEuax7a",
+          "contenido": {
+            "coincidencias": [
+              {
+                "cliente_id": 102,
+                "nombre": "Laura Gómez"
+              },
+              {
+                "cliente_id": 104,
+                "nombre": "Martín Gómez"
+              }
+            ],
+            "ambiguo": true
+          }
+        },
+        {
+          "paso": 3,
+          "nodo": "agent",
+          "tipo": "final_answer",
+          "contenido": "Hay más de un cliente con el apellido Gómez. ¿De cuál querés ver los pedidos?\n\n- Laura Gómez (ID 102)\n- Martín Gómez (ID 104)"
+        }
+      ],
+      "tool_calls": 1
+    }
+  ],
+  "tool_calls_total": 2
+}

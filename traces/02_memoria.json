@@ -1,0 +1,71 @@
+{
+  "escenario": "02_memoria",
+  "descripcion": "Mismo thread_id que 01_multipaso: el agente resuelve '¿y el último?' con el contexto persistido, sin volver a buscar al cliente.",
+  "thread_id": "demo-laura-20261007-202605",
+  "modelo": "claude-sonnet-5-5",
+  "recursion_limit": 10,
+  "inicio": "2026-10-07T20:26:10-03:00",
+  "turnos": [
+    {
+      "usuario": "¿Y el último?",
+      "pasos": [
+        {
+          "paso": 1,
+          "nodo": "agent",
+          "tipo": "tool_call",
+          "tool": "obtener_detalle_pedido",
+          "args": {
+            "pedido_id": 5003
+          },
+          "id": "toolu_01Mxtnq57jwuKYiN7PWNQdWQ"
+        },
+        {
+          "paso": 2,
+          "nodo": "tools",
+          "tipo": "tool_result",
+          "tool": "obtener_detalle_pedido",
+          "tool_call_id": "toolu_01Mxtnq57jwuKYiN7PWNQdWQ",
+          "contenido": {
+            "pedido_id": 5003,
+            "cliente_id": 102,
+            "fecha": "2026-09-28",
+            "total": 6200,
+            "estado": "en camino",
+            "items": [
+              {
+                "producto": "Webcam Full HD",
+                "cantidad": 1,
+                "precio_unitario": 4200
+              },
+              {
+                "producto": "Hub USB-C",
+                "cantidad": 1,
+                "precio_unitario": 2000
+              }
+            ]
+          }
+        },
+        {
+          "paso": 3,
+          "nodo": "agent",
+          "tipo": "final_answer",
+          "contenido": "El último pedido de Laura Gómez es el **5003**, del 28/09/2026. Está **en camino** y el total es de **$6.200**.\n\nItems:\n- Webcam Full HD, 1 unidad a $4.200\n- Hub USB-C, 1 unidad a $2.000"
+        }
+      ],
+      "tool_calls": 1
+    },
+    {
+      "usuario": "¿En qué estado está?",
+      "pasos": [
+        {
+          "paso": 1,
+          "nodo": "agent",
+          "tipo": "final_answer",
+          "contenido": "El pedido 5003 está **en camino**."
+        }
+      ],
+      "tool_calls": 0
+    }
+  ],
+  "tool_calls_total": 1
+}

@@ -1,0 +1,88 @@
+{
+  "escenario": "01_multipaso",
+  "descripcion": "El usuario da un nombre, no un ID: el agente encadena buscar_cliente → buscar_pedidos antes de responder (razonamiento multi-paso).",
+  "thread_id": "demo-laura-20261007-202605",
+  "modelo": "claude-sonnet-5-5",
+  "recursion_limit": 10,
+  "inicio": "2026-10-07T20:26:05-03:00",
+  "turnos": [
+    {
+      "usuario": "¿Cuántos pedidos tuvo Laura Gómez y cuál fue el total?",
+      "pasos": [
+        {
+          "paso": 1,
+          "nodo": "agent",
+          "tipo": "tool_call",
+          "tool": "buscar_cliente",
+          "args": {
+            "nombre": "Laura Gómez"
+          },
+          "id": "toolu_01QCHVd5KZecp9a9pdWZrPDa"
+        },
+        {
+          "paso": 2,
+          "nodo": "tools",
+          "tipo": "tool_result",
+          "tool": "buscar_cliente",
+          "tool_call_id": "toolu_01QCHVd5KZecp9a9pdWZrPDa",
+          "contenido": {
+            "coincidencias": [
+              {
+                "cliente_id": 102,
+                "nombre": "Laura Gómez"
+              }
+            ],
+            "ambiguo": false
+          }
+        },
+        {
+          "paso": 3,
+          "nodo": "agent",
+          "tipo": "tool_call",
+          "tool": "buscar_pedidos",
+          "args": {
+            "cliente_id": 102
+          },
+          "id": "toolu_01GAfMc1aZzj1et4eGmuBRji"
+        },
+        {
+          "paso": 4,
+          "nodo": "tools",
+          "tipo": "tool_result",
+          "tool": "buscar_pedidos",
+          "tool_call_id": "toolu_01GAfMc1aZzj1et4eGmuBRji",
+          "contenido": {
+            "cliente_id": 102,
+            "cantidad_pedidos": 3,
+            "total": 14500,
+            "pedidos": [
+              {
+                "pedido_id": 5003,
+                "fecha": "2026-09-28",
+                "total": 6200
+              },
+              {
+                "pedido_id": 5002,
+                "fecha": "2026-08-20",
+                "total": 4500
+              },
+              {
+                "pedido_id": 5001,
+                "fecha": "2026-07-15",
+                "total": 3800
+              }
+            ]
+          }
+        },
+        {
+          "paso": 5,
+          "nodo": "agent",
+          "tipo": "final_answer",
+          "contenido": "Laura Gómez (ID 102) tuvo **3 pedidos**, por un total de **$14.500**.\n\n- Pedido 5003 (28/09/2026): $6.200\n- Pedido 5002 (20/08/2026): $4.500\n- Pedido 5001 (15/07/2026): $3.800"
+        }
+      ],
+      "tool_calls": 2
+    }
+  ],
+  "tool_calls_total": 2
+}

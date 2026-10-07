@@ -1,0 +1,46 @@
+[01_multipaso] thread=demo-laura-20261007-202605
+Usuario: "¿Cuántos pedidos tuvo Laura Gómez y cuál fue el total?"
+→ agent decide: buscar_cliente(nombre="Laura Gómez")
+→ tool devuelve: {"coincidencias": [{"cliente_id": 102, "nombre": "Laura Gómez"}], "ambiguo": false}
+→ agent decide: buscar_pedidos(cliente_id=102)
+→ tool devuelve: {"cliente_id": 102, "cantidad_pedidos": 3, "total": 14500, "pedidos": [{"pedido_id": 5003, "fecha": "2026-09-28", "total": 6200}, {"pedido_id": 5002, "fecha": "2026-08-20", "total": 4500}, {"pedido_id": 5001, "fecha": "2026-07-15", "total": 3800}]}
+Respuesta: "Laura Gómez (ID 102) tuvo **3 pedidos**, por un total de **$14.500**.
+
+- Pedido 5003 (28/09/2026): $6.200
+- Pedido 5002 (20/08/2026): $4.500
+- Pedido 5001 (15/07/2026): $3.800"
+
+[02_memoria] thread=demo-laura-20261007-202605
+Usuario: "¿Y el último?"
+→ agent decide: obtener_detalle_pedido(pedido_id=5003)
+→ tool devuelve: {"pedido_id": 5003, "cliente_id": 102, "fecha": "2026-09-28", "total": 6200, "estado": "en camino", "items": [{"producto": "Webcam Full HD", "cantidad": 1, "precio_unitario": 4200}, {"producto": "Hub USB-C", "cantidad": 1, "precio_unitario": 2000}]}
+Respuesta: "El último pedido de Laura Gómez es el **5003**, del 28/09/2026. Está **en camino** y el total es de **$6.200**.
+
+Items:
+- Webcam Full HD, 1 unidad a $4.200
+- Hub USB-C, 1 unidad a $2.000"
+Usuario: "¿En qué estado está?"
+Respuesta: "El pedido 5003 está **en camino**."
+
+[03_error_y_reintento] thread=demo-errores-20261007-202605
+Usuario: "Mostrame los pedidos del cliente 999"
+→ agent decide: buscar_pedidos(cliente_id=999)
+→ tool devuelve: {"error": "Cliente 999 no existe", "sugerencia": "usar buscar_cliente para obtener el ID correcto o pedírselo al usuario"}
+Respuesta: "No encontré ningún cliente con el ID 999. ¿Me pasás el nombre o el apellido del cliente? Con eso lo busco y obtengo el ID correcto."
+Usuario: "¿Qué pedidos tiene Gómez?"
+→ agent decide: buscar_cliente(nombre="Gómez")
+→ tool devuelve: {"coincidencias": [{"cliente_id": 102, "nombre": "Laura Gómez"}, {"cliente_id": 104, "nombre": "Martín Gómez"}], "ambiguo": true}
+Respuesta: "Hay más de un cliente con el apellido Gómez. ¿De cuál querés ver los pedidos?
+
+- Laura Gómez (ID 102)
+- Martín Gómez (ID 104)"
+
+[04_aislamiento_threads] thread=demo-aislado-20261007-202605
+Usuario: "¿Y el último pedido?"
+Respuesta: "No tengo el dato de qué cliente te referís: no hay mensajes previos en la conversación. ¿De qué cliente querés saber el último pedido? Pasame el nombre o el ID."
+
+Resumen de checks
+  [PASS] 01_multipaso — la herramienta se invoca al menos 2 veces
+  [PASS] 02_memoria — recuerda al cliente (no vuelve a llamar a buscar_cliente)
+  [PASS] 03_error_y_reintento — maneja el error de la tool y pide aclarar entre Laura y Martín
+  [PASS] 04_aislamiento_threads — sin contexto no llama herramientas y pide aclaración

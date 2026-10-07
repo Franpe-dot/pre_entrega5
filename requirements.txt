@@ -1,0 +1,8 @@
+langgraph
+langgraph-checkpoint-sqlite
+aiosqlite
+langchain-core
+langchain-anthropic
+pydantic
+pydantic-settings
+python-dotenv

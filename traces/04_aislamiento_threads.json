@@ -1,0 +1,23 @@
+{
+  "escenario": "04_aislamiento_threads",
+  "descripcion": "Thread nuevo, misma pregunta que en 02: sin historial el agente no sabe de qué cliente se habla y lo pregunta. La memoria es por thread_id.",
+  "thread_id": "demo-aislado-20261007-202605",
+  "modelo": "claude-sonnet-5-5",
+  "recursion_limit": 10,
+  "inicio": "2026-10-07T20:26:20-03:00",
+  "turnos": [
+    {
+      "usuario": "¿Y el último pedido?",
+      "pasos": [
+        {
+          "paso": 1,
+          "nodo": "agent",
+          "tipo": "final_answer",
+          "contenido": "No tengo el dato de qué cliente te referís: no hay mensajes previos en la conversación. ¿De qué cliente querés saber el último pedido? Pasame el nombre o el ID."
+        }
+      ],
+      "tool_calls": 0
+    }
+  ],
+  "tool_calls_total": 0
+}
